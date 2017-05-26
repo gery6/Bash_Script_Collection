@@ -1,0 +1,25 @@
+#!/bin/bash
+if [ -z $1 ]; then echo "Please use $0 <source file or dir> <where/packagename.tgz>";
+else
+if [ -z $2 ]; then echo "Please use $0 <source file or dir> <where/packagename.tgz>";
+else
+(tar cf - $1 \
+               | pv -n -s $(du -sb $1 | awk '{print $1}') \
+               | gzip -9 > $2) 2>&1 \
+              | dialog --gauge 'Progress' 5 30;
+
+clear
+size=`du -h $2 | awk '{ print $1 }'`
+dialog --msgbox '
+         #############################
+         # Packed File informations: #
+         #############################
+          Source: '$1'  
+          Packed-File: '$2' 
+          Size: '$size' 
+         #############################' 15 60; 
+clear 
+fi
+fi
+
+exit 0

@@ -1,0 +1,30 @@
+#!/bin/bash
+if [ -z $1 ]; then echo "Please use $0 <size in MB> <where/datafoo.dmp>";
+else
+if [ -z $2 ]; then echo "Please use $0 <size in MB> <where/datafoo.dmp>";
+else
+(dd bs=1M count=$1 if=/dev/zero | pv -n -s $1M | dd of=$2) 2>&1 | dialog --gauge "       Creating DATAFOO - In Progress
+
+ creating the dumpfile $2
+ with a size of $1M.
+
+ Please wait..
+
+ " 15 60;
+
+
+clear
+size=`du -h $2 | awk '{ print $1 }'`
+dialog --msgbox '
+         ##############################
+         # DATAFOO File informations: #
+         ##############################
+          Wished Size: '$1'M  
+          dumped File: '$2' 
+          File   Size: '$size' 
+         ##############################' 15 60; 
+clear 
+fi
+fi
+
+exit 0
